@@ -7,7 +7,6 @@ var pkg            = require(path.join(__dirname, '..', 'package.json'));
 var updateNotifier = require('update-notifier');
 
 var template = require('../lib/util/template');
-var bower    = require('../lib');
 
 var command;
 var options;
@@ -18,6 +17,13 @@ var reqVer  = pkg.engines.node;
 var errors = [];
 var notifier = updateNotifier({ packageName: pkg.name, packageVersion: pkg.version });
 
+var bower;
+try {
+  bower = require('../lib');
+} catch(err) {
+  process.stderr.write(template('error', { message: err.message }, true));
+  process.exit(1);
+}
 if (notifier.update) {
   process.stderr.write(template('update-notice', notifier.update, true));
 }
